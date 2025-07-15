@@ -1,16 +1,34 @@
 # ProtonBase Demo
 
-This repository contains the demo files for ProtonBase, a unified multi-modal database that combines relational, JSON, text, geospatial, and vector data types in a single database.
+This repository contains the demo files for ProtonBase (Tacnode), a unified multi-modal database platform that combines relational, JSON, text, geospatial, and vector data types in a single system.
 
 ## Overview
 
-ProtonBase is a next-generation database that eliminates data silos by supporting multiple data types in a single platform:
+ProtonBase (Tacnode) is a next-generation database platform that eliminates data silos by providing a unified solution for all your data needs:
+
+- **Instant Lakehouse** - Real-time performance at scale with sub-second analytics
+- **Online Retrieval** - Real-time vector and semantic search with zero-latency updates
+- **PostgreSQL Compatibility** - High compatibility with existing tools and extensions
+- **Cloud-Native Design** - Instant elasticity for dynamic workloads
+- **Bring AI to Your Data** - Extract knowledge and discover insights with AI
+
+### Unified Data Types
+
+ProtonBase supports multiple data types in a single platform:
 
 - **Relational data** - Traditional structured data with ACID transactions
 - **JSON data** - Flexible schema design for semi-structured data
 - **Text data** - Full-text search with ranking and highlighting
 - **Geospatial data** - Location-based queries and spatial analysis
 - **Vector data** - Similarity search for AI and machine learning applications
+
+### Key Advantages
+
+- **Single Point of Truth** - One database for all your data needs
+- **Simplified Architecture** - No need to integrate multiple specialized databases
+- **Lower Latency** - No cross-database joins or data movement
+- **Consistent Data** - No synchronization issues between systems
+- **Reduced Costs** - Fewer systems to maintain and operate
 
 ## Repository Contents
 
@@ -33,7 +51,7 @@ ProtonBase is a next-generation database that eliminates data silos by supportin
 
 ## Getting Started
 
-1. Install ProtonBase following the instructions at [protonbase.io/install](https://protonbase.io/install)
+1. Install ProtonBase following the instructions at [tacnode.io](https://tacnode.io/)
 2. Clone this repository
 3. Run the setup script: `psql -f scripts/01_setup.sql`
 4. Load the sample data: `psql -f scripts/02_load_data.sql`
@@ -140,10 +158,20 @@ LIMIT 3;  -- Show the top 3 recommendations
 - **Faster Development** - No need to integrate multiple databases
 - **Better User Experience** - Faster, more intuitive search and recommendations
 
+## Use Cases
+
+ProtonBase (Tacnode) excels in various use cases:
+
+- **AI Applications** - Bring AI to your data with vector embeddings and similarity search
+- **Real-time Analytics** - Process and analyze data in real-time with sub-second performance
+- **Personalization** - Create personalized experiences based on user preferences and behavior
+- **Fraud Detection** - Identify suspicious patterns across multiple data dimensions
+- **Content Discovery** - Help users find relevant content through multi-modal search
+
 ## License
 
-This demo is provided for educational purposes only. ProtonBase is a commercial product.
+This demo is provided for educational purposes only. ProtonBase (Tacnode) is a commercial product.
 
 ## Contact
 
-For more information about ProtonBase, visit [protonbase.io](https://protonbase.io) or contact info@protonbase.io.
+For more information about ProtonBase (Tacnode), visit [tacnode.io](https://tacnode.io/) or contact info@tacnode.io.
