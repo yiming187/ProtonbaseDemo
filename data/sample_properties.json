@@ -1,0 +1,97 @@
+[
+  {
+    "listing": {
+      "title": "Luxury Penthouse with City Views",
+      "address": "1000 5th Ave",
+      "city": "Seattle",
+      "state": "WA",
+      "zip_code": "98101",
+      "price": 3500000.00,
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "square_feet": 3500,
+      "year_built": 2019,
+      "property_type": "Penthouse",
+      "listing_date": "2025-01-05",
+      "status": "Active"
+    },
+    "features": {
+      "amenities": ["Air Conditioning", "Washer/Dryer", "Gym", "Pool", "Concierge", "Private Elevator", "Balcony", "Wine Cellar"],
+      "interior": {
+        "flooring": "Marble/Hardwood",
+        "kitchen": "Chef's Kitchen",
+        "windows": "Floor-to-ceiling"
+      },
+      "exterior": {
+        "facade": "Glass and Steel",
+        "parking": "3 Reserved Spaces"
+      }
+    },
+    "description_xml": "<description><overview>Stunning luxury penthouse with panoramic city and water views</overview><details><room type=\"Living\">Expansive living area with fireplace and wet bar</room><room type=\"Kitchen\">Chef's kitchen with top-of-the-line appliances</room><room type=\"Master Bedroom\">Master suite with private terrace and spa bathroom</room></details><neighborhood>Premier downtown location with access to the best restaurants and cultural venues</neighborhood></description>",
+    "metadata": {
+      "listing_agent": "Alexandra Reynolds",
+      "virtual_tour": true,
+      "open_house": {
+        "scheduled": true,
+        "dates": ["2025-02-10", "2025-02-11"]
+      },
+      "showing_instructions": "By appointment only, pre-approval required",
+      "year_renovated": null,
+      "hoa_fee": 1500,
+      "parking_spaces": 3
+    },
+    "location": {
+      "latitude": 47.6080,
+      "longitude": -122.3377
+    },
+    "description_text": "Experience the pinnacle of luxury living in this extraordinary penthouse located in the heart of downtown Seattle. This magnificent residence spans the entire top floor, offering breathtaking 360-degree views of the city skyline, Puget Sound, and surrounding mountains through walls of floor-to-ceiling windows. The grand open floor plan is ideal for sophisticated entertaining, featuring a stunning living room with a gas fireplace, formal dining area, and a wet bar. The state-of-the-art chef's kitchen showcases custom Italian cabinetry, premium appliances including a Sub-Zero refrigerator and Wolf range, and a large center island with waterfall marble countertops. The opulent master suite occupies its own private wing with a sitting area, private terrace, custom walk-in closet, and a sumptuous bathroom with a soaking tub and steam shower. Three additional bedroom suites provide luxurious accommodations for family and guests. Additional features include a home office, media room, wine cellar, smart home technology, and multiple terraces for outdoor enjoyment. Building amenities include 24-hour concierge service, valet parking, fitness center with yoga studio, heated pool, resident lounge, and wine storage. Located in the city's most prestigious address, this penthouse offers unparalleled luxury and convenience with world-class dining, shopping, and cultural attractions just steps away.",
+    "embedding": [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4]
+  },
+  {
+    "listing": {
+      "title": "Waterfront Estate with Private Dock",
+      "address": "123 Lakeside Dr",
+      "city": "Mercer Island",
+      "state": "WA",
+      "zip_code": "98040",
+      "price": 8500000.00,
+      "bedrooms": 6,
+      "bathrooms": 7.5,
+      "square_feet": 8200,
+      "year_built": 2010,
+      "property_type": "Single Family",
+      "listing_date": "2025-01-10",
+      "status": "Active"
+    },
+    "features": {
+      "amenities": ["Pool", "Hot Tub", "Sauna", "Home Theater", "Wine Cellar", "Gym", "Dock", "Waterfront", "Elevator", "Smart Home"],
+      "interior": {
+        "flooring": "Hardwood/Marble/Carpet",
+        "kitchen": "Gourmet Chef's Kitchen",
+        "windows": "Floor-to-ceiling with water views"
+      },
+      "exterior": {
+        "facade": "Stone and Cedar",
+        "parking": "6-car garage"
+      }
+    },
+    "description_xml": "<description><overview>Magnificent waterfront estate with private dock and panoramic lake views</overview><details><room type=\"Living\">Grand living room with stone fireplace and lake views</room><room type=\"Kitchen\">Gourmet kitchen with butler's pantry and professional appliances</room><room type=\"Master Bedroom\">Luxurious master suite with private terrace and spa bathroom</room></details><neighborhood>Prestigious Mercer Island location with privacy and security</neighborhood></description>",
+    "metadata": {
+      "listing_agent": "Jonathan Blake",
+      "virtual_tour": true,
+      "open_house": {
+        "scheduled": false
+      },
+      "showing_instructions": "By appointment only, pre-approval and NDA required",
+      "year_renovated": 2020,
+      "hoa_fee": 0,
+      "parking_spaces": 6
+    },
+    "location": {
+      "latitude": 47.5707,
+      "longitude": -122.2221
+    },
+    "description_text": "Discover unparalleled luxury in this magnificent waterfront estate on Mercer Island. Set on 1.5 acres of meticulously landscaped grounds with 150 feet of private shoreline, this extraordinary residence offers breathtaking panoramic views of Lake Washington and the Seattle skyline. The grand entrance with soaring ceilings leads to a stunning great room featuring a wall of windows that showcase the spectacular water views and a massive stone fireplace. The gourmet chef's kitchen is equipped with top-of-the-line appliances, custom cabinetry, and a large center island, perfect for entertaining. Adjacent is a formal dining room with a temperature-controlled wine wall. The main level master suite is a private sanctuary with a sitting area, fireplace, private terrace, and a sumptuous bathroom with a jetted tub and steam shower. Five additional bedroom suites provide luxurious accommodations for family and guests. The lower level features a state-of-the-art home theater, wine cellar, gym, sauna, and game room. Outdoor amenities include a resort-style pool and spa, covered outdoor kitchen, multiple terraces, and a private dock with boat lift. Additional features include an elevator, smart home technology, generator, and a 6-car garage. Located in the prestigious Mercer Island community, this estate offers the perfect blend of privacy, security, and convenience with easy access to Seattle and Bellevue.",
+    "embedding": [0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4]
+  }
+]
