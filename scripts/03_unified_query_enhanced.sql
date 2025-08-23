@@ -61,7 +61,7 @@ SET PASSWORD TO '<YOUR_DATABASE_PASSWORD>';
 -- In a real application, this would come from an embedding model analyzing the client's
 -- previous property views, saved properties, and feedback
 WITH search_vector AS (
-    SELECT '[' || array_to_string(array_fill(0.036::float, ARRAY[384]), ',') || ']'::VECTOR(384) AS vector
+    SELECT array_fill(0.036::float, ARRAY[384])::VECTOR(384) AS vector
 ),
 -- Define a search query for full-text search
 -- The client specifically mentioned wanting luxury properties with great kitchens and views
@@ -97,7 +97,7 @@ SELECT
     
     -- Geospatial data - Calculate exact distance to downtown in miles
     ST_Distance(
-        p.location::geography,
+        p.location_point::geography,
         rp.point
     ) / 1609.344 AS distance_miles,
     
@@ -117,7 +117,7 @@ SELECT
         
         -- Inverse of normalized distance (20%) - Closer properties score higher
         -- The client needs to be within reasonable commuting distance to headquarters
-        (1 - LEAST(ST_Distance(p.location::geography, rp.point) / 10000, 1)) * 0.2 +
+        (1 - LEAST(ST_Distance(p.location_point::geography, rp.point) / 10000, 1)) * 0.2 +
         
         -- Price factor (10%) - Lower price gets higher score within the luxury range
         -- This rewards properties that offer better value while still meeting luxury standards
@@ -144,7 +144,7 @@ WHERE
     -- Geospatial condition: Within 10 miles of downtown Seattle headquarters
     -- This uses spatial indexing to efficiently find nearby properties
     AND ST_DWithin(
-        p.location::geography,
+        p.location_point::geography,
         rp.point,
         16093.4  -- 10 miles in meters
     )
@@ -174,13 +174,13 @@ ORDER BY
 \echo 'This query adds neighborhood information to help clients understand the local context\n'
 
 WITH search_vector AS (
-    SELECT '[' || array_to_string(array_fill(0.036::float, ARRAY[384]), ',') || ']'::VECTOR(384) AS vector
+    SELECT array_fill(0.036::float, ARRAY[384])::VECTOR(384) AS vector
 ),
 search_query AS (
     SELECT to_tsquery('english', 'luxury & kitchen & view') AS query
 ),
 reference_point AS (
-    SELECT ST_SetSRID(ST_MakePoint(-122.3321, 47.6062), 4326)::geography AS point
+    SELECT ST_GeomFromText('POINT(-122.3321 47.6062)',4326)::GEOGRAPHY AS point
 )
 
 SELECT 
@@ -208,7 +208,7 @@ SELECT
     
     -- Geospatial data - calculate distance
     ST_Distance(
-        p.location::geography,
+        p.location_point::geography,
         rp.point
     ) / 1609.344 AS distance_miles,
     
@@ -219,7 +219,7 @@ SELECT
     (
         ts_rank(p.description_tsv, sq.query) * 0.3 +
         (1 - (p.embedding <=> sv.vector)) * 0.3 +
-        (1 - LEAST(ST_Distance(p.location::geography, rp.point) / 10000, 1)) * 0.2 +
+        (1 - LEAST(ST_Distance(p.location_point::geography, rp.point) / 10000, 1)) * 0.2 +
         (1 - (p.price / 5000000)) * 0.1 +
         (jsonb_array_length(p.amenities->'indoor') + jsonb_array_length(p.amenities->'outdoor')) / 20.0 * 0.1
     ) AS combined_score
@@ -227,7 +227,7 @@ FROM
     -- Join properties with neighborhoods using spatial relationship
     -- This spatial join finds which neighborhood polygon contains each property point
     property_data.unified_properties p
-    LEFT JOIN property_data.neighborhoods n ON ST_Contains(n.boundary, p.location),
+    LEFT JOIN property_data.neighborhoods n ON ST_Contains(n.location_polygon::geometry, p.location_point::geometry),
     search_vector sv,
     search_query sq,
     reference_point rp
@@ -240,7 +240,7 @@ WHERE
     
     -- Geospatial condition: Within 10 miles of downtown Seattle
     AND ST_DWithin(
-        p.location::geography,
+        p.location_point::geography,
         rp.point,
         16093.4  -- 10 miles in meters
     )
@@ -278,7 +278,7 @@ ORDER BY
 -- User preferences - In a real application, these would come from the user's profile
 WITH user_preferences AS (
     SELECT
-        'luxury & modern & view'::text AS search_terms,
+        'luxury modern view'::text AS search_terms,
         3::int AS min_bedrooms,
         2::int AS min_bathrooms,
         1500000::numeric AS min_price,
@@ -287,7 +287,7 @@ WITH user_preferences AS (
         ARRAY['Wolf Range', 'Sub-Zero Refrigerator']::text[] AS preferred_appliances,
         5::int AS max_miles_from_downtown,
         'Downtown Seattle'::text AS preferred_neighborhood,
-        '[' || array_to_string(array_fill(0.036::float, ARRAY[384]), ',') || ']'::VECTOR(384) AS style_preference_vector
+        array_fill(0.036::float, ARRAY[384])::VECTOR(384) AS style_preference_vector
 ),
 -- Derived search parameters - Transform user preferences into query parameters
 search_params AS (
@@ -296,7 +296,7 @@ search_params AS (
         to_tsquery('english', regexp_replace(search_terms, '\s+', ' & ', 'g')) AS search_query,
         
         -- Define the downtown point for distance calculations
-        ST_SetSRID(ST_MakePoint(-122.3321, 47.6062), 4326)::geography AS downtown_point,
+        ST_GeomFromText('POINT(-122.3321 47.6062)', 4326)::geography AS downtown_point,
         
         -- Pass through other preferences
         min_bedrooms,
@@ -329,7 +329,7 @@ SELECT
     
     -- Distance from downtown - Critical for commute time calculation
     ST_Distance(
-        p.location::geography,
+        p.location_point,
         sp.downtown_point
     ) / 1609.344 AS miles_from_downtown,
     
@@ -368,7 +368,7 @@ SELECT
         (1 - (p.embedding <=> sp.style_preference_vector)) * 0.25 +
         
         -- Location score (20%) - Closer to downtown is better for the client's commute
-        (1 - LEAST(ST_Distance(p.location::geography, sp.downtown_point) / (sp.max_miles_from_downtown * 1609.34), 1)) * 0.20 +
+        (1 - LEAST(ST_Distance(p.location_point, sp.downtown_point) / (sp.max_miles_from_downtown * 1609.34), 1)) * 0.20 +
         
         -- Neighborhood match (10%) - Bonus if in preferred neighborhood
         CASE WHEN n.name = sp.preferred_neighborhood THEN 0.10 ELSE 0 END +
@@ -400,7 +400,7 @@ SELECT
 FROM 
     -- Join properties with neighborhoods
     property_data.unified_properties p
-    LEFT JOIN property_data.neighborhoods n ON ST_Contains(n.boundary, p.location),
+    LEFT JOIN property_data.neighborhoods n ON ST_Contains(n.location_polygon::geometry, p.location_point::geometry),
     search_params sp
 WHERE 
     -- Basic property criteria - Traditional relational filtering
@@ -416,7 +416,7 @@ WHERE
     -- Location criteria - Find properties within the client's commute radius
     -- This uses spatial indexing for efficient proximity search
     AND ST_DWithin(
-        p.location::geography,
+        p.location_point,
         sp.downtown_point,
         sp.max_miles_from_downtown * 1609.34  -- Convert miles to meters
     )
@@ -457,7 +457,7 @@ WITH user_interest AS (
         amenities,
         features,
         description_tsv,
-        location,
+        location_point,
         property_type,
         price
     FROM property_data.unified_properties
@@ -504,20 +504,14 @@ SELECT
     
     -- Distance between properties - How close they are geographically
     ST_Distance(
-        p.location::geography,
-        ui.location::geography
+        p.location_point,
+        ui.location_point
     ) / 1609.344 AS distance_miles,
     
-    -- Text similarity using TF-IDF - How similar the descriptions are
-    -- This extracts key terms from the reference property and searches for them
-    ts_rank(p.description_tsv, 
-        (SELECT tsq FROM 
-            (SELECT array_agg(lexeme) AS lexemes FROM 
-                ts_stat('SELECT to_tsvector(''english'', description) FROM property_data.unified_properties WHERE id = 1')
-            ) AS stats, 
-            lateral to_tsquery('english', array_to_string(lexemes, ' | '))  AS tsq
-        )
-    ) AS description_similarity,
+    -- Text similarity - Use simple ranking against reference property description
+    ts_rank(p.description_tsv, plainto_tsquery('english', 
+        (SELECT description FROM property_data.unified_properties WHERE id = 1)
+    )) AS description_similarity,
     
     -- Overall similarity score - Weighted combination of all factors
     (
@@ -542,7 +536,7 @@ SELECT
         ) * 0.2 +
         
         -- Location proximity (20%) - Similar neighborhood/area
-        (1 - LEAST(ST_Distance(p.location::geography, ui.location::geography) / 16093.4, 1)) * 0.2 +
+        (1 - LEAST(ST_Distance(p.location_point, ui.location_point) / 16093.4, 1)) * 0.2 +
         
         -- Property type match (10%) - Same property type (condo, house, etc.)
         CASE WHEN p.property_type = ui.property_type THEN 0.1 ELSE 0 END +

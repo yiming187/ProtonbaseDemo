@@ -2,14 +2,14 @@
 -- This script inserts realistic sample data into the consolidated schema
 -- The data is designed to showcase ProtonBase's ability to handle multiple data types
 
--- Insert sample neighborhoods for geospatial queries (simplified without PostGIS)
-INSERT INTO property_data.neighborhoods (name, min_latitude, max_latitude, min_longitude, max_longitude)
+-- Insert sample neighborhoods for geospatial queries using PostGIS POLYGON
+INSERT INTO property_data.neighborhoods (name, location_polygon)
 VALUES 
-    ('Downtown Seattle', 47.5962, 47.6162, -122.3421, -122.3321),
-    ('Capitol Hill', 47.6162, 47.6262, -122.3221, -122.3121),
-    ('South Lake Union', 47.6262, 47.6362, -122.3421, -122.3321),
-    ('Ballard', 47.6562, 47.6762, -122.3821, -122.3621),
-    ('Bellevue Downtown', 47.6101, 47.6201, -122.2106, -122.2006);
+    ('Downtown Seattle', ST_GeomFromText('POLYGON((-122.3450 47.5950, -122.3300 47.5950, -122.3300 47.6150, -122.3450 47.6150, -122.3450 47.5950))', 4326)),
+    ('Capitol Hill', ST_GeomFromText('POLYGON((-122.3250 47.6100, -122.3100 47.6100, -122.3100 47.6300, -122.3250 47.6300, -122.3250 47.6100))', 4326)),
+    ('South Lake Union', ST_GeomFromText('POLYGON((-122.3500 47.6150, -122.3350 47.6150, -122.3350 47.6250, -122.3500 47.6250, -122.3500 47.6150))', 4326)),
+    ('Ballard', ST_GeomFromText('POLYGON((-122.3900 47.6600, -122.3650 47.6600, -122.3650 47.6800, -122.3900 47.6800, -122.3900 47.6600))', 4326)),
+    ('Bellevue Downtown', ST_GeomFromText('POLYGON((-122.2150 47.6050, -122.1950 47.6050, -122.1950 47.6150, -122.2150 47.6150, -122.2150 47.6050))', 4326));
 
 -- Insert sample unified properties with all data types in a single table
 INSERT INTO property_data.unified_properties (
@@ -21,7 +21,7 @@ INSERT INTO property_data.unified_properties (
     -- Text data
     description,
     -- Geospatial data
-    latitude, longitude,
+    location_point,
     -- Vector data (384-dimensional, but using simplified vectors for demo)
     embedding
 ) VALUES
@@ -89,11 +89,11 @@ Building amenities include 24/7 concierge service, valet parking, a state-of-the
 
 Located in the prestigious Infinity Tower, residents enjoy walking distance to Seattle''s finest restaurants, shops, arts venues, and the waterfront. This penthouse represents the ultimate in sophisticated urban living.',
         
-        -- Geospatial data (latitude, longitude)
-        47.6062, -122.3321,
+        -- Geospatial data (longitude, latitude)
+        ST_GeomFromText('POINT(-122.3321 47.6062)',4326)::GEOGRAPHY,
         
         -- Vector embedding (simplified 384-dimensional vector)
-        '[' || array_to_string(array_fill(0.036::float, ARRAY[384]), ',') || ']'
+        array_fill(0.036::float, ARRAY[384])
     ),
     (
         -- Property 2: Waterfront Luxury Home
@@ -164,11 +164,11 @@ The outdoor oasis showcases an infinity pool that appears to merge with the lake
 
 This extraordinary property offers the perfect blend of sophisticated design, luxurious amenities, and a premier waterfront location just minutes from downtown Seattle.',
         
-        -- Geospatial data (latitude, longitude)
-        47.6371, -122.2559,
+        -- Geospatial data (longitude, latitude)
+        ST_GeomFromText('POINT(-122.2559 47.6371)',4326)::GEOGRAPHY,
         
         -- Vector embedding (simplified 384-dimensional vector)
-        '[' || array_to_string(array_fill(0.042::float, ARRAY[384]), ',') || ']'
+       array_fill(0.042::float, ARRAY[384])
     ),
     (
         -- Property 3: Modern Tech Hub Loft
@@ -242,11 +242,11 @@ Building amenities include a coworking space with private meeting rooms, a state
 
 Located in the heart of Seattle''s Innovation District, this loft is within walking distance to major tech companies, trendy restaurants, artisanal coffee shops, and public transportation. This is urban living redesigned for the modern tech professional.',
         
-        -- Geospatial data (latitude, longitude)
-        47.6205, -122.3493,
+        -- Geospatial data (longitude, latitude)
+        ST_GeomFromText('POINT(-122.3493 47.6205)',4326)::GEOGRAPHY,
         
         -- Vector embedding (simplified 384-dimensional vector)
-        '[' || array_to_string(array_fill(0.039::float, ARRAY[384]), ',') || ']'
+        array_fill(0.039::float, ARRAY[384])
     ),
     (
         -- Property 4: Historic Craftsman Home
@@ -311,11 +311,11 @@ Modern updates include radiant floor heating, mini-split cooling system, updated
 
 Located in the heart of Capitol Hill, this home is within walking distance to restaurants, shops, parks, and public transportation. This is a rare opportunity to own a piece of Seattle''s architectural history with all the comforts of modern living.',
         
-        -- Geospatial data (latitude, longitude)
-        47.6250, -122.3125,
+        -- Geospatial data (longitude, latitude)
+        ST_GeomFromText('POINT(-122.3125 47.6250)',4326)::GEOGRAPHY,
         
         -- Vector embedding (simplified 384-dimensional vector)
-        '[' || array_to_string(array_fill(0.033::float, ARRAY[384]), ',') || ']'
+        array_fill(0.033::float, ARRAY[384])
     ),
     (
         -- Property 5: Eco-Friendly Smart Home
@@ -390,11 +390,11 @@ Outdoor features include a rainwater harvesting system that supplies irrigation 
 
 Located in a premier Bellevue neighborhood, this home is close to tech campuses, excellent schools, shopping, dining, and parks. This is more than just a home—it''s a statement about sustainable living without compromise.',
         
-        -- Geospatial data (latitude, longitude)
-        47.6101, -122.2015,
+        -- Geospatial data (longitude, latitude)
+        ST_GeomFromText('POINT(-122.2015 47.6101)',4326)::GEOGRAPHY,
         
         -- Vector embedding (simplified 384-dimensional vector)
-        '[' || array_to_string(array_fill(0.045::float, ARRAY[384]), ',') || ']'
+       array_fill(0.045::float, ARRAY[384])
     );
 
 -- Print success message
