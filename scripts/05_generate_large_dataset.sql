@@ -17,13 +17,20 @@
 
 -- Verify required tables exist before generating data
 DO $$
+DECLARE
+    table_count INTEGER;
 BEGIN
-    -- Check if schema and tables are properly set up
-    IF (SELECT count(*) FROM information_schema.tables 
-        WHERE table_schema = 'property_data' 
-        AND table_name IN ('unified_properties', 'neighborhoods')) < 2 THEN
-        RAISE EXCEPTION 'Required tables not found. Please run scripts/01_setup_schema.sql first.';
+    -- Check if both required tables exist
+    SELECT COUNT(*) INTO table_count
+    FROM information_schema.tables 
+    WHERE table_schema = 'property_data' 
+        AND table_name IN ('unified_properties', 'neighborhoods');
+    
+    IF table_count < 2 THEN
+        RAISE EXCEPTION 'Required tables not found. Please run scripts/01_setup_schema.sql first. Found % of 2 required tables.', table_count;
     END IF;
+    
+    RAISE NOTICE 'Table validation passed. Found % required tables.', table_count;
 END $$;
 
 -- Clear existing large data first (keep only original 5 records for unified_properties)

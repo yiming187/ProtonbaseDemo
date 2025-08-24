@@ -149,19 +149,19 @@ Successful output should show the ProtonBase version information.
 
 ## Getting Started
 
-## Getting Started
-
 ### Quick Start with Automated Script
 
-### Quick Start with Automated Script
-
-1. **Copy the configuration template**: 
+1. **Validate your environment**: Check prerequisites and configuration
+   ```bash
+   ./validate_config.sh
+   ```
+2. **Copy the configuration template**: 
    ```bash
    cp .env.example .env
    ```
-2. **Configure Database Connection**: Edit the `.env` file with your ProtonBase database credentials
-3. **Clone this repository**: `git clone <repository-url>`
-4. **Run the automated demo**: `./run_demo.sh`
+3. **Configure Database Connection**: Edit the `.env` file with your ProtonBase database credentials
+4. **Clone this repository**: `git clone <repository-url>`
+5. **Run the automated demo**: `./run_demo.sh`
 5. **Select demo type**: Choose between standard demo (option 1) or enhanced demo with business storyline (option 2)
 6. **Choose cleanup**: Decide whether to clean up the database after the demo
 

@@ -39,6 +39,55 @@ for var in "${required_vars[@]}"; do
     fi
 done
 
+# Database connection helper function
+execute_sql_script() {
+    local script_file="$1"
+    local output_file="$2"
+    local description="${3:-Executing SQL script}"
+    
+    echo -e "${BLUE}$description: $script_file${NC}"
+    
+    if [ ! -f "$script_file" ]; then
+        echo -e "${RED}Error: SQL script file not found: $script_file${NC}"
+        return 1
+    fi
+    
+    if [ -n "$output_file" ]; then
+        psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f "$script_file" 2>&1 | tee "$output_file"
+        local exit_code=${PIPESTATUS[0]}
+    else
+        psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f "$script_file"
+        local exit_code=$?
+    fi
+    
+    if [ $exit_code -ne 0 ]; then
+        echo -e "${RED}Error: $description failed with exit code $exit_code${NC}"
+        if [ -n "$output_file" ]; then
+            echo -e "${YELLOW}Check $output_file for detailed error information${NC}"
+        fi
+    fi
+    
+    return $exit_code
+}
+
+# Database query helper function
+execute_sql_query() {
+    local query="$1"
+    local description="${2:-Executing SQL query}"
+    
+    echo -e "${BLUE}$description${NC}" >&2
+    
+    local result=$(psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -t -c "$query" 2>/dev/null | tr -d ' ')
+    local exit_code=$?
+    
+    if [ $exit_code -ne 0 ]; then
+        echo -e "${RED}Error: $description failed${NC}" >&2
+        return 1
+    fi
+    
+    echo "$result"
+}
+
 # ==============================================
 # PART 1: SCHEMA INITIALIZATION AND DATA SETUP
 # ==============================================
@@ -53,7 +102,7 @@ initialize_database() {
     
     # Run the setup script
     echo -e "\n${YELLOW}Setting up the schema...${NC}"
-    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/01_setup_schema.sql 2>&1 | tee output/setup_output.txt
+    execute_sql_script "scripts/01_setup_schema.sql" "output/setup_output.txt"
     
     # Check if the setup was successful
     if [ $? -eq 0 ]; then
@@ -65,7 +114,7 @@ initialize_database() {
     
     # Insert sample data
     echo -e "\n${YELLOW}Inserting sample data...${NC}"
-    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/02_insert_data.sql 2>&1 | tee output/data_output.txt
+    execute_sql_script "scripts/02_insert_data.sql" "output/data_output.txt"
     
     # Check if the data insertion was successful
     if [ $? -eq 0 ]; then
@@ -97,7 +146,7 @@ initialize_database() {
         # Modify the SQL file to use the specified size
         sed "s/\\\\set DATASET_SIZE 10000/\\\\set DATASET_SIZE $dataset_size/g" scripts/05_generate_large_dataset.sql > /tmp/temp_dataset.sql
         
-        psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f /tmp/temp_dataset.sql 2>&1 | tee output/large_dataset_output.txt
+        execute_sql_script "/tmp/temp_dataset.sql" "output/large_dataset_output.txt"
         
         # Clean up temp file
         rm -f /tmp/temp_dataset.sql
@@ -112,7 +161,7 @@ initialize_database() {
     fi
     
     # Show current dataset size
-    record_count=$(psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -t -c "SELECT count(*) FROM property_data.unified_properties;" 2>/dev/null | tr -d ' ')
+    record_count=$(execute_sql_query "SELECT count(*) FROM property_data.unified_properties;")
     echo -e "\n${GREEN}Database initialization complete. Current dataset size: $record_count records${NC}"
 }
 
