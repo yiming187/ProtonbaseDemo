@@ -1,10 +1,10 @@
 # ProtonBase Demo
 
-This repository contains the demo files for ProtonBase (Tacnode), a unified multi-modal database platform that combines relational, JSON, text, geospatial, and vector data types in a single system.
+This repository contains the demo files for ProtonBase, a unified multi-modal database platform that combines relational, JSON, text, geospatial, and vector data types in a single system.
 
 ## Overview
 
-ProtonBase (Tacnode) is a next-generation database platform that eliminates data silos by providing a unified solution for all your data needs:
+ProtonBase is a next-generation database platform that eliminates data silos by providing a unified solution for all your data needs:
 
 - **Instant Lakehouse** - Real-time performance at scale with sub-second analytics
 - **Online Retrieval** - Real-time vector and semantic search with zero-latency updates
@@ -49,15 +49,177 @@ ProtonBase supports multiple data types in a single platform:
 
 - `sample_properties.json` - Sample property data used in the demo
 
+## Database Connection Configuration
+
+This demo is designed to work with a remote ProtonBase database instance. Before running the demo, you need to configure the database connection parameters.
+
+### Prerequisites
+
+- Access to a ProtonBase database instance (cloud or on-premises)
+- Database connection credentials (host, port, username, password, database name)
+- PostgreSQL client tools installed (`psql`)
+
+### Connection Methods
+
+#### Method 1: Using Environment Configuration File (Recommended)
+
+The demo uses a `.env` file to store database connection parameters securely. This file is excluded from version control to protect sensitive information.
+
+**Setup Steps:**
+
+1. **Copy the template file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edit the `.env` file with your database credentials:**
+   ```bash
+   # ProtonBase Database Connection Configuration
+   PGHOST=your-protonbase-host.com
+   PGPORT=5432
+   PGUSER=your-username@domain.com
+   PGDATABASE=postgres
+   PGPASSWORD=your-password
+   ```
+
+3. **Run the demo:**
+   ```bash
+   ./run_demo.sh
+   ```
+
+The script will automatically load the configuration from `.env` and validate all required parameters.
+
+#### Method 2: Environment Variables
+
+Set the connection parameters as environment variables in your shell:
+
+```bash
+export PGHOST="your-protonbase-host.com"
+export PGPORT="5432"
+export PGUSER="your-username@domain.com"
+export PGDATABASE="postgres"
+export PGPASSWORD="your-password"
+
+# Then run psql commands directly
+psql -c "SELECT version();"
+```
+
+### Security Considerations
+
+- **Use `.env` files for sensitive data** - Store database credentials in `.env` files that are excluded from version control
+- **Never commit passwords to version control** - The `.gitignore` file ensures `.env` files are not tracked by git
+- **Use `.env.example` for documentation** - Provide template files without sensitive information for team sharing
+- **Use SSL connections** when connecting to remote databases
+- **Limit database user permissions** to only what's needed for the demo
+- **Consider using connection pooling** for production environments
+- **Rotate passwords regularly** and use strong, unique passwords for each environment
+
+### Troubleshooting Connection Issues
+
+#### Common Connection Errors and Solutions:
+
+1. **"Connection refused"**
+   - Check if the host address and port are correct
+   - Verify firewall rules allow connections to the database port
+   - Ensure the ProtonBase service is running
+
+2. **"Authentication failed"**
+   - Verify username and password are correct
+   - Check if the user has permission to connect to the specified database
+   - Ensure the authentication method matches the server configuration
+
+3. **"Database does not exist"**
+   - Verify the database name is correct (usually "postgres" for ProtonBase)
+   - Check if you have permission to access the specified database
+
+4. **"SSL connection error"**
+   - Add SSL parameters if required: `psql "sslmode=require host=... port=... user=... dbname=..."`
+
+#### Testing Your Connection
+
+Before running the full demo, test your connection with:
+
+```bash
+PGPASSWORD="your-password" psql -h your-host -p 5432 -U your-username -d postgres -c "SELECT version();"
+```
+
+Successful output should show the ProtonBase version information.
+
 ## Getting Started
 
-1. Install ProtonBase following the instructions at [tacnode.io](https://tacnode.io/)
-2. Clone this repository
-3. Run the setup script: `psql -f scripts/01_setup.sql`
-4. Load the sample data: `psql -f scripts/02_load_data.sql`
-5. Run the example queries: `psql -f scripts/03_unified_query.sql`
-6. Try the advanced queries: `psql -f scripts/03_unified_query_enhanced.sql`
-7. Clean up when finished: `psql -f scripts/04_cleanup.sql`
+## Getting Started
+
+### Quick Start with Automated Script
+
+### Quick Start with Automated Script
+
+1. **Copy the configuration template**: 
+   ```bash
+   cp .env.example .env
+   ```
+2. **Configure Database Connection**: Edit the `.env` file with your ProtonBase database credentials
+3. **Clone this repository**: `git clone <repository-url>`
+4. **Run the automated demo**: `./run_demo.sh`
+5. **Select demo type**: Choose between standard demo (option 1) or enhanced demo with business storyline (option 2)
+6. **Choose cleanup**: Decide whether to clean up the database after the demo
+
+The automated script will:
+- Set up the database schema and tables
+- Load sample property data
+- Execute multi-modal queries
+- Display results and performance metrics
+- Optionally clean up the database
+
+### Manual Execution
+
+Alternatively, you can run the scripts manually:
+
+1. **Set up connection**: Configure your database connection (see Database Connection Configuration)
+2. **Create schema**: Run the setup script to create tables and indexes
+   ```bash
+   psql -h your-host -p 5432 -U your-username -d postgres -f scripts/01_setup_schema.sql
+   ```
+3. **Load sample data**: Insert the demo property data
+   ```bash
+   psql -h your-host -p 5432 -U your-username -d postgres -f scripts/02_insert_data.sql
+   ```
+4. **Run basic queries**: Execute unified multi-modal query examples
+   ```bash
+   psql -h your-host -p 5432 -U your-username -d postgres -f scripts/03_unified_query.sql
+   ```
+5. **Try advanced queries**: Run enhanced queries with business storyline
+   ```bash
+   psql -h your-host -p 5432 -U your-username -d postgres -f scripts/03_unified_query_enhanced.sql
+   ```
+6. **Clean up**: Remove demo data when finished
+   ```bash
+   psql -h your-host -p 5432 -U your-username -d postgres -f scripts/04_cleanup.sql
+   ```
+
+### What You'll See
+
+The demo showcases:
+- **Unified queries** combining relational, JSON, text, geospatial, and vector data
+- **Real-time performance** with query execution times under 200ms
+- **Personalized recommendations** using vector similarity search
+- **Geospatial analysis** with distance calculations and location-based filtering
+- **Full-text search** with highlighted results
+- **Business impact metrics** showing the value of unified data platforms
+
+## Demo Output
+
+The demo generates several output files in the `output/` directory:
+
+- **`query_output.txt`** - Complete query results and execution logs
+- **`setup_output.txt`** - Database schema creation logs
+- **`data_output.txt`** - Sample data insertion logs
+- **`cleanup_output.txt`** - Database cleanup logs
+
+These files contain detailed information about:
+- Query execution times and performance metrics
+- Complete result sets showing multi-modal data integration
+- SQL query explanations and business context
+- Error messages and troubleshooting information
 
 ## Key Features Demonstrated
 
@@ -160,7 +322,7 @@ LIMIT 3;  -- Show the top 3 recommendations
 
 ## Use Cases
 
-ProtonBase (Tacnode) excels in various use cases:
+ProtonBase excels in various use cases:
 
 - **AI Applications** - Bring AI to your data with vector embeddings and similarity search
 - **Real-time Analytics** - Process and analyze data in real-time with sub-second performance
@@ -168,10 +330,18 @@ ProtonBase (Tacnode) excels in various use cases:
 - **Fraud Detection** - Identify suspicious patterns across multiple data dimensions
 - **Content Discovery** - Help users find relevant content through multi-modal search
 
+### Getting Help
+
+If you encounter issues not covered here:
+1. Check the output files in the `output/` directory for detailed error messages
+2. Review the database connection configuration
+3. Test basic connectivity with `psql -h host -p port -U username -d database -c "SELECT version();"`
+4. Contact ProtonBase support with specific error messages and configuration details
+
 ## License
 
-This demo is provided for educational purposes only. ProtonBase (Tacnode) is a commercial product.
+This demo is provided for educational purposes only. ProtonBase is a commercial product.
 
 ## Contact
 
-For more information about ProtonBase (Tacnode), visit [tacnode.io](https://tacnode.io/) or contact info@tacnode.io.
+For more information about ProtonBase, visit [protonbase.com](https://protonbase.com/) or contact service@protonbase.com.

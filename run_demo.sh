@@ -16,25 +16,36 @@ echo -e "${BLUE}   One Database for All Your Data Types                ${NC}"
 echo -e "${BLUE}   With Business Storyline                             ${NC}"
 echo -e "${BLUE}=======================================================${NC}"
 
-# Check if PostgreSQL is running
-echo -e "\n${YELLOW}Checking if PostgreSQL is running...${NC}"
-if pg_isready > /dev/null 2>&1; then
-    echo -e "${GREEN}PostgreSQL is running.${NC}"
+# ProtonBase connection is configured - proceeding with demo
+echo -e "\n${YELLOW}Connecting to remote ProtonBase database...${NC}"
+echo -e "${GREEN}ProtonBase connection configured.${NC}"
+
+# Load database connection configuration from .env file
+if [ -f ".env" ]; then
+    echo -e "${YELLOW}Loading database configuration from .env file...${NC}"
+    export $(grep -v '^#' .env | xargs)
 else
-    echo -e "${RED}PostgreSQL is not running. Please start PostgreSQL and try again.${NC}"
+    echo -e "${RED}Error: .env file not found!${NC}"
+    echo -e "${YELLOW}Please copy .env.example to .env and configure your database connection details.${NC}"
+    echo -e "${YELLOW}Example: cp .env.example .env${NC}"
     exit 1
 fi
 
-# Set the password for ProtonBase
-# IMPORTANT: Replace with your actual database password
-export PGPASSWORD="<YOUR_DATABASE_PASSWORD>"
+# Validate required environment variables
+required_vars=("PGHOST" "PGPORT" "PGUSER" "PGDATABASE" "PGPASSWORD")
+for var in "${required_vars[@]}"; do
+    if [ -z "${!var}" ]; then
+        echo -e "${RED}Error: Required environment variable $var is not set in .env file${NC}"
+        exit 1
+    fi
+done
 
 # Create a directory for output
 mkdir -p output
 
 # Run the setup script
 echo -e "\n${YELLOW}Setting up the schema...${NC}"
-sudo -u postgres psql -f scripts/01_setup_schema.sql 2>&1 | tee output/setup_output.txt && sleep 1
+psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/01_setup_schema.sql 2>&1 | tee output/setup_output.txt && sleep 1
 
 # Check if the setup was successful
 if [ $? -eq 0 ]; then
@@ -46,7 +57,7 @@ fi
 
 # Insert sample data
 echo -e "\n${YELLOW}Inserting sample data...${NC}"
-sudo -u postgres psql -f scripts/02_insert_data.sql 2>&1 | tee output/data_output.txt && sleep 1
+psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/02_insert_data.sql 2>&1 | tee output/data_output.txt && sleep 1
 
 # Check if the data insertion was successful
 if [ $? -eq 0 ]; then
@@ -69,7 +80,7 @@ if [ "$demo_choice" == "1" ]; then
     echo -e "${YELLOW}This demonstrates how ProtonBase can query multiple data types in a single query.${NC}"
     echo -e "${YELLOW}Results will be saved to output/query_output.txt${NC}"
     
-    sudo -u postgres psql -f scripts/03_unified_query.sql 2>&1 | tee output/query_output.txt && sleep 1
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query.sql 2>&1 | tee output/query_output.txt && sleep 1
 elif [ "$demo_choice" == "2" ]; then
     # Run the enhanced unified query with storyline
     echo -e "\n${YELLOW}Running enhanced unified multi-modal query with business storyline...${NC}"
@@ -77,7 +88,7 @@ elif [ "$demo_choice" == "2" ]; then
     echo -e "${YELLOW}The query includes a compelling storyline about a luxury real estate platform.${NC}"
     echo -e "${YELLOW}Results will be saved to output/query_output.txt${NC}"
     
-    sudo -u postgres psql -f scripts/03_unified_query_enhanced.sql 2>&1 | tee output/query_output.txt && sleep 1
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query_enhanced.sql 2>&1 | tee output/query_output.txt && sleep 1
 else
     echo -e "${RED}Invalid choice. Exiting.${NC}"
     exit 1
@@ -97,7 +108,7 @@ echo -e "\n${YELLOW}Do you want to clean up the database? (y/n)${NC}"
 read -r answer
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo -e "\n${YELLOW}Cleaning up...${NC}"
-    sudo -u postgres psql -f scripts/04_cleanup.sql 2>&1 | tee output/cleanup_output.txt && sleep 1
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/04_cleanup.sql 2>&1 | tee output/cleanup_output.txt && sleep 1
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}Cleanup completed successfully.${NC}"

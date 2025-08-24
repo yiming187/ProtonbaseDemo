@@ -1,0 +1,36 @@
+# Environment variables and sensitive configuration
+.env
+.env.local
+.env.*.local
+
+# Database connection files
+config/database.conf
+*.conf
+
+# Output files
+output/
+*.log
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp

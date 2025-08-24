@@ -7,7 +7,7 @@
 
 -- Enable required extensions
 -- Note: These extensions are available in ProtonBase but may not be installed on this system
-CREATE EXTENSION postgis; -- For PostGIS
+CREATE EXTENSION IF NOT EXISTS postgis; -- For PostGIS
 
 -- Create schema
 CREATE SCHEMA IF NOT EXISTS property_data;

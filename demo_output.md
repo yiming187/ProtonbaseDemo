@@ -1,5 +1,5 @@
 ======================================================
-ProtonBase (Tacnode) for Generative AI Agents
+ProtonBase for Generative AI Agents
    One Database for All Your AI Agent Data Needs
    Unified Data Access for Intelligent Agents
 =======================================================
@@ -25,8 +25,8 @@ Traditional approaches require the AI Agent to query multiple specialized databa
 - PostGIS for location-based matchmaking
 - Pinecone/Weaviate for vector embeddings and similarity search
 
-THE TACNODE SOLUTION:
-ProtonBase (Tacnode) provides a Single Point of Truth for all data types:
+THE PROTONBASE SOLUTION:
+ProtonBase provides a Single Point of Truth for all data types:
 - One database for all AI Agent queries
 - Simplified architecture with fewer integration points
 - Lower latency without cross-database joins
@@ -877,13 +877,13 @@ With ProtonBase, these recommendations become much more sophisticated because th
 
 BUSINESS SCENARIO:
 The AI Agent needs to recommend in-game content based on player preferences.
-Without Tacnode, this would require:
+Without ProtonBase, this would require:
 - Query PostgreSQL for player profile
 - Query MongoDB for player behavior
 - Query Pinecone for vector similarity search
 - Join results in application code
 
-WITH TACNODE:
+WITH PROTONBASE:
 The AI Agent can execute a single query combining all data types:
 
 SQL QUERY WITH DETAILED EXPLANATION:
@@ -1031,13 +1031,13 @@ flagged) and false negatives (cheaters who stay just under thresholds).
 
 BUSINESS SCENARIO:
 The AI Agent needs to detect potential fraud or cheating in real-time.
-Without Tacnode, this would require:
+Without ProtonBase, this would require:
 - Query PostgreSQL for player statistics
 - Query MongoDB for recent behavior
 - Query Elasticsearch for player reports
 - Complex analysis in application code
 
-WITH TACNODE:
+WITH PROTONBASE:
 The AI Agent can execute a single query combining all signals:
 
 SQL QUERY WITH DETAILED EXPLANATION:
@@ -1199,14 +1199,14 @@ The AI Agent combines multiple signals to calculate a 'fraud score':
 3. Abnormal Win Rate (10% weight): Consistently winning at rates above statistical norms
 4. Player Reports (20% weight): Reports from other players about suspicious behavior
 
-REAL-TIME ADVANTAGE WITH TACNODE:
+REAL-TIME ADVANTAGE WITH PROTONBASE:
 Traditional anti-cheat systems often work with delayed data:
 1. Game data is collected during play
 2. Data is exported to specialized analytics systems
 3. Analysis runs hours or days later
 4. Cheaters are banned after they've already ruined many games
 
-With ProtonBase (Tacnode), the analysis happens in real-time because all data types are in one place:
+With ProtonBase, the analysis happens in real-time because all data types are in one place:
 1. Game data is continuously analyzed during play
 2. Suspicious patterns are detected immediately
 3. Action can be taken before the cheater affects many other players
@@ -1240,14 +1240,14 @@ new content specifically for each player.
 
 BUSINESS SCENARIO:
 The AI Agent needs to generate personalized game content based on player data.
-Without Tacnode, this would require:
+Without ProtonBase, this would require:
 - Query PostgreSQL for player profile
 - Query MongoDB for preferences and history
 - Query Pinecone for content similarity
 - Query PostGIS for location-based content
 - Complex content generation in application code
 
-WITH TACNODE:
+WITH PROTONBASE:
 The AI Agent can generate content with a single query:
 
 SQL QUERY WITH DETAILED EXPLANATION:
@@ -1510,7 +1510,7 @@ Traditional approaches require:
 3. Moving data between systems (causing delays)
 4. Maintaining multiple technologies and skill sets
 
-ProtonBase (Tacnode) provides a unified data platform for gaming companies:
+ProtonBase provides a unified data platform for gaming companies:
 1. Single Point Of Truth: Consolidate all data types in one consistent, real-time home
 2. Instant Lakehouse: Real-time performance at scale with sub-second analytics
 3. Online Retrieval: Real-time vector and semantic search with zero-latency updates

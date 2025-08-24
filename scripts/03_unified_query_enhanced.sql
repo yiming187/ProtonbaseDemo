@@ -2,16 +2,13 @@
 -- This script demonstrates how ProtonBase can query multiple data types in a single query
 -- This is the key advantage of ProtonBase - no need for multiple databases
 
--- Connect to the property_listings database
-\c property_listings;
+-- Connect to the postgres database
+\c postgres;
 
 -- Enable timing to show performance
 \timing on
 
--- Set the password for the session (required for ProtonBase)
--- This is typically done in a connection string, but we're setting it here for the demo
--- IMPORTANT: Replace with your actual database password
-SET PASSWORD TO '<YOUR_DATABASE_PASSWORD>';
+-- Password is already set via environment variable PGPASSWORD
 
 -- =====================================================================
 -- STORYLINE: LUXURY REAL ESTATE PLATFORM "ELITE PROPERTIES"

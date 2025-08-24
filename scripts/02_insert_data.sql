@@ -5,11 +5,11 @@
 -- Insert sample neighborhoods for geospatial queries using PostGIS POLYGON
 INSERT INTO property_data.neighborhoods (name, location_polygon)
 VALUES 
-    ('Downtown Seattle', ST_GeomFromText('POLYGON((-122.3450 47.5950, -122.3300 47.5950, -122.3300 47.6150, -122.3450 47.6150, -122.3450 47.5950))', 4326)),
-    ('Capitol Hill', ST_GeomFromText('POLYGON((-122.3250 47.6100, -122.3100 47.6100, -122.3100 47.6300, -122.3250 47.6300, -122.3250 47.6100))', 4326)),
-    ('South Lake Union', ST_GeomFromText('POLYGON((-122.3500 47.6150, -122.3350 47.6150, -122.3350 47.6250, -122.3500 47.6250, -122.3500 47.6150))', 4326)),
-    ('Ballard', ST_GeomFromText('POLYGON((-122.3900 47.6600, -122.3650 47.6600, -122.3650 47.6800, -122.3900 47.6800, -122.3900 47.6600))', 4326)),
-    ('Bellevue Downtown', ST_GeomFromText('POLYGON((-122.2150 47.6050, -122.1950 47.6050, -122.1950 47.6150, -122.2150 47.6150, -122.2150 47.6050))', 4326));
+    ('Downtown Seattle', ST_GeomFromText('POLYGON((-122.3421 47.5962, -122.3321 47.5962, -122.3321 47.6162, -122.3421 47.6162, -122.3421 47.5962))', 4326)),
+    ('Capitol Hill', ST_GeomFromText('POLYGON((-122.3221 47.6162, -122.3121 47.6162, -122.3121 47.6262, -122.3221 47.6262, -122.3221 47.6162))', 4326)),
+    ('South Lake Union', ST_GeomFromText('POLYGON((-122.3421 47.6262, -122.3321 47.6262, -122.3321 47.6362, -122.3421 47.6362, -122.3421 47.6262))', 4326)),
+    ('Ballard', ST_GeomFromText('POLYGON((-122.3821 47.6562, -122.3621 47.6562, -122.3621 47.6762, -122.3821 47.6762, -122.3821 47.6562))', 4326)),
+    ('Bellevue Downtown', ST_GeomFromText('POLYGON((-122.2106 47.6101, -122.2006 47.6101, -122.2006 47.6201, -122.2106 47.6201, -122.2106 47.6101))', 4326));
 
 -- Insert sample unified properties with all data types in a single table
 INSERT INTO property_data.unified_properties (
