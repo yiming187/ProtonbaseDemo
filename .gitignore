@@ -3,9 +3,12 @@
 .env.local
 .env.*.local
 
+# Local configuration overrides
+dataset.local.conf
+
 # Database connection files
 config/database.conf
-*.conf
+*.local.conf
 
 # Output files
 output/

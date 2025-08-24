@@ -34,11 +34,13 @@ ProtonBase supports multiple data types in a single platform:
 
 ### Scripts
 
-- `01_setup.sql` - Creates the database schema and tables
-- `02_load_data.sql` - Loads sample property data into the database
+- `01_setup_schema.sql` - Creates the database schema and tables
+- `02_insert_data.sql` - Loads sample property data into the database
 - `03_unified_query.sql` - Basic unified multi-modal query examples
 - `03_unified_query_enhanced.sql` - Advanced unified multi-modal query examples
 - `04_cleanup.sql` - Cleans up the database after the demo
+- `05_generate_large_dataset.sql` - Generates test datasets (1K-1M records) for performance testing
+- `06_test_large_dataset.sql` - Comprehensive performance tests for large datasets
 
 ### Presentation
 
@@ -206,20 +208,68 @@ The demo showcases:
 - **Full-text search** with highlighted results
 - **Business impact metrics** showing the value of unified data platforms
 
+### Large Dataset Testing (Optional)
+
+For performance testing, the demo can generate test datasets of various sizes:
+
+**Dataset Size Options:**
+- **1,000 records** - Quick test (< 1 minute)
+- **10,000 records** - Medium test (1-2 minutes, default)
+- **100,000 records** - Large test (5-10 minutes)
+- **1,000,000 records** - Enterprise scale (15-30 minutes)
+
+**Automatic Generation (Recommended):**
+During the demo setup, you'll be prompted to generate a large dataset. The system uses intelligent defaults for optimal performance.
+
+**Manual Generation with Custom Size:**
+```bash
+# Generate specific dataset size (example: 50,000 records)
+psql -h your-host -p 5432 -U your-username -d postgres -v DATASET_SIZE=50000 -f scripts/05_generate_large_dataset.sql
+
+# Run performance tests
+psql -h your-host -p 5432 -U your-username -d postgres -f scripts/06_test_large_dataset.sql
+```
+
+**Configuration:**
+Modify `dataset.conf` to adjust default dataset size and performance test settings:
+```conf
+# Set default dataset size
+DATASET_SIZE=10000
+
+# Enable/disable automatic performance tests
+RUN_PERFORMANCE_TESTS=true
+```
+
+**Performance Test Features:**
+- Aggregation operations on large datasets
+- JSON query performance testing
+- Full-text search scalability
+- Geospatial query optimization
+- Vector similarity search at scale
+- Complex multi-modal query performance
+- Index usage analysis and optimization
+
 ## Demo Output
 
 The demo generates several output files in the `output/` directory:
 
+**Standard Demo Files:**
 - **`query_output.txt`** - Complete query results and execution logs
 - **`setup_output.txt`** - Database schema creation logs
 - **`data_output.txt`** - Sample data insertion logs
 - **`cleanup_output.txt`** - Database cleanup logs
+
+**Large Dataset Files (when enabled):**
+- **`large_dataset_output.txt`** - 1 million record generation logs and statistics
+- **`performance_test_output.txt`** - Comprehensive performance test results on large dataset
 
 These files contain detailed information about:
 - Query execution times and performance metrics
 - Complete result sets showing multi-modal data integration
 - SQL query explanations and business context
 - Error messages and troubleshooting information
+- Large-scale performance benchmarks and optimization insights
+- Memory usage and index effectiveness analysis
 
 ## Key Features Demonstrated
 
