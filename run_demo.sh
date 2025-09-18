@@ -125,39 +125,30 @@ initialize_database() {
     fi
     
     # Ask if user wants to generate large dataset with custom size
-    echo -e "\n${YELLOW}Do you want to generate additional test data for performance testing? (y/n)${NC}"
-    read -r large_dataset_answer
-    if [[ "$large_dataset_answer" =~ ^[Yy]$ ]]; then
-        echo -e "\n${YELLOW}Please enter the number of records to generate:${NC}"
-        echo -e "${YELLOW}Suggested values: 1000 (quick), 10000 (medium), 100000 (large), 1000000 (full scale)${NC}"
-        read -r dataset_size
-        
-        # Validate input
+    echo -e "\n${YELLOW}Generate additional test data for performance testing? Press Enter to use default 10000, enter n to skip, or enter a number:${NC}"
+    read -r dataset_size
+    if [[ -z "$dataset_size" ]]; then
+        dataset_size=10000
+    fi
+    if [[ "$dataset_size" =~ ^[Nn]$ ]]; then
+        echo -e "${YELLOW}Skipping large dataset generation. Using standard 5-record demo.${NC}"
+    else
         if ! [[ "$dataset_size" =~ ^[0-9]+$ ]] || [ "$dataset_size" -lt 100 ]; then
             echo -e "${RED}Invalid input. Using default size of 10000 records.${NC}"
             dataset_size=10000
         fi
-        
         echo -e "\n${YELLOW}Generating $dataset_size test records...${NC}"
         if [ "$dataset_size" -gt 100000 ]; then
             echo -e "${YELLOW}Warning: This may take 5-10 minutes for large datasets.${NC}"
         fi
-        
-        # Modify the SQL file to use the specified size
-        sed "s/\\\\set DATASET_SIZE 10000/\\\\set DATASET_SIZE $dataset_size/g" scripts/05_generate_large_dataset.sql > /tmp/temp_dataset.sql
-        
-        execute_sql_script "/tmp/temp_dataset.sql" "output/large_dataset_output.txt"
-        
-        # Clean up temp file
+        sed "s/\\set DATASET_SIZE 10000/\\set DATASET_SIZE $dataset_size/g" scripts/05_generate_large_dataset.sql > /tmp/temp_dataset.sql
+        execute_sql_script "/tmp/temp_dataset.sql" "output/large_dataset_output_$(date +%Y%m%d%H%M%S).txt"
         rm -f /tmp/temp_dataset.sql
-        
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}Dataset with $dataset_size records generated successfully!${NC}"
         else
             echo -e "${RED}Dataset generation failed. Please check the output.${NC}"
         fi
-    else
-        echo -e "${YELLOW}Using standard 5-record dataset for demonstration.${NC}"
     fi
     
     # Show current dataset size
@@ -169,54 +160,36 @@ initialize_database() {
 # PART 2: INTERACTIVE TESTING LOOP
 # ==============================================
 
+
 run_test_menu() {
-    while true; do
-        # Get current dataset size
-        record_count=$(psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -t -c "SELECT count(*) FROM property_data.unified_properties;" 2>/dev/null | tr -d ' ')
-        
-        echo -e "\n${BLUE}=============================================${NC}"
-        echo -e "${BLUE}   PART 2: Testing Options${NC}"
-        echo -e "${BLUE}=============================================${NC}"
-        echo -e "${YELLOW}Current dataset size: $record_count records${NC}"
-        echo -e "\n${YELLOW}Select a test to run:${NC}"
-        echo -e "1. Standard Demo (Multi-modal Query Examples)"
-        echo -e "2. Enhanced Demo (Business Storyline - Elite Properties)"
-        echo -e "3. Performance Test (Comprehensive Performance Analysis)"
-        echo -e "4. Exit to cleanup options"
-        
-        echo -e "\n${YELLOW}Enter your choice (1, 2, 3, or 4): ${NC}"
-        read -r demo_choice
-        
-        case $demo_choice in
+    # Get current dataset size
+    record_count=$(psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -t -c "SELECT count(*) FROM property_data.unified_properties;" 2>/dev/null | tr -d ' ')
+    echo -e "\n${BLUE}=============================================${NC}"
+    echo -e "${BLUE}   PART 2: Testing Options${NC}"
+    echo -e "${BLUE}=============================================${NC}"
+    echo -e "${YELLOW}Current dataset size: $record_count records${NC}"
+    echo -e "\n${YELLOW}Select tests to run (comma separated, Enter for all):${NC}"
+    echo -e "1. Standard Demo (Multi-modal Query Examples)"
+    echo -e "2. Enhanced Demo (Business Storyline - Elite Properties)"
+    echo -e "3. Performance Test (Comprehensive Performance Analysis)"
+    read -r test_choices
+    if [[ -z "$test_choices" ]]; then
+        test_choices="1,2,3"
+    fi
+    IFS=',' read -ra choices <<< "$test_choices"
+    for choice in "${choices[@]}"; do
+        case $(echo $choice | xargs) in
             1)
                 run_standard_demo
-                ask_continue_testing
-                if [ $? -ne 0 ]; then
-                    break
-                fi
                 ;;
             2)
                 run_enhanced_demo
-                ask_continue_testing
-                if [ $? -ne 0 ]; then
-                    break
-                fi
                 ;;
             3)
                 run_performance_test
-                ask_continue_testing
-                if [ $? -ne 0 ]; then
-                    break
-                fi
-                ;;
-            4)
-                echo -e "${YELLOW}Exiting test menu...${NC}"
-                break
                 ;;
             *)
-                echo -e "${RED}Invalid choice. Please enter 1, 2, 3, or 4.${NC}"
-                echo -e "\n${YELLOW}Press Enter to try again...${NC}"
-                read -r
+                echo -e "${RED}Invalid choice: $choice. Skipping.${NC}"
                 ;;
         esac
     done
@@ -245,89 +218,44 @@ ask_continue_testing() {
 }
 
 run_standard_demo() {
-    echo -e "\n${YELLOW}Running standard unified multi-modal query...${NC}"
-    echo -e "${YELLOW}This demonstrates how ProtonBase can query multiple data types in a single query.${NC}"
-    echo -e "${YELLOW}Results will be saved to output/query_output.txt${NC}"
-    
-    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query.sql 2>&1 | tee output/query_output.txt
-    
+    local outfile="output/query_output_standard_$(date +%Y%m%d%H%M%S).txt"
+    echo -e "\n${YELLOW}Running standard unified multi-modal query demo...${NC}"
+    echo -e "${YELLOW}Results will be saved to $outfile${NC}"
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query.sql 2>&1 | tee "$outfile"
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Standard demo completed successfully!${NC}"
-        echo -e "${GREEN}Results saved to output/query_output.txt${NC}"
-        echo -e "\n${BLUE}======== Demo Results Summary ========${NC}"
-        echo -e "${YELLOW}The query demonstrates ProtonBase's ability to:${NC}"
-        echo -e "• Combine relational data (price, bedrooms) with JSON attributes"
-        echo -e "• Perform full-text search on property descriptions"
-        echo -e "• Execute geospatial queries for location-based filtering"
-        echo -e "• Run vector similarity search for personalized recommendations"
-        echo -e "• Deliver all results in a single, unified query"
+        echo -e "${GREEN}Standard demo completed! Results saved to $outfile${NC}"
     else
-        echo -e "${RED}Standard demo encountered an error. Please check the output.${NC}"
+        echo -e "${RED}Standard demo failed. Please check the output.${NC}"
     fi
-    
-    echo -e "\n${YELLOW}Press Enter to continue...${NC}"
-    read -r
 }
 
 run_enhanced_demo() {
-    echo -e "\n${YELLOW}Running enhanced unified multi-modal query with business storyline...${NC}"
-    echo -e "${YELLOW}This demonstrates ProtonBase in a real-world luxury real estate platform scenario.${NC}"
-    echo -e "${YELLOW}Results will be saved to output/query_output.txt${NC}"
-    
-    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query_enhanced.sql 2>&1 | tee output/query_output.txt
-    
+    local outfile="output/query_output_enhanced_$(date +%Y%m%d%H%M%S).txt"
+    echo -e "\n${YELLOW}Running enhanced unified multi-modal query demo (business storyline)...${NC}"
+    echo -e "${YELLOW}Results will be saved to $outfile${NC}"
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/03_unified_query_enhanced.sql 2>&1 | tee "$outfile"
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Enhanced demo completed successfully!${NC}"
-        echo -e "${GREEN}Results saved to output/query_output.txt${NC}"
-        echo -e "\n${BLUE}======== Enhanced Demo Summary ========${NC}"
-        echo -e "${YELLOW}This scenario demonstrates:${NC}"
-        echo -e "• Real-world use case: Elite Properties luxury real estate platform"
-        echo -e "• Business storyline: Matching high-end properties to wealthy clients"
-        echo -e "• Multi-modal data integration for sophisticated property matching"
-        echo -e "• AI-powered recommendations based on client preferences and behavior"
-        echo -e "• Competitive advantage through unified data platform"
+        echo -e "${GREEN}Enhanced demo completed! Results saved to $outfile${NC}"
     else
-        echo -e "${RED}Enhanced demo encountered an error. Please check the output.${NC}"
+        echo -e "${RED}Enhanced demo failed. Please check the output.${NC}"
     fi
-    
-    echo -e "\n${YELLOW}Press Enter to continue...${NC}"
-    read -r
 }
 
 run_performance_test() {
     record_count=$(psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -t -c "SELECT count(*) FROM property_data.unified_properties;" 2>/dev/null | tr -d ' ')
-    
+    local outfile="output/performance_test_output_$(date +%Y%m%d%H%M%S).txt"
     echo -e "\n${YELLOW}Running comprehensive performance test...${NC}"
     echo -e "${YELLOW}This will test query performance on $record_count records.${NC}"
-    echo -e "${YELLOW}Performance tests include: aggregation, JSON queries, full-text search,${NC}"
-    echo -e "${YELLOW}geospatial operations, vector similarity, neighborhoods analysis, and multi-modal queries.${NC}"
-    echo -e "${YELLOW}Results will be saved to output/performance_test_output.txt${NC}"
-    
+    echo -e "${YELLOW}Results will be saved to $outfile${NC}"
     if [ "$record_count" -gt 50000 ]; then
         echo -e "${YELLOW}Warning: Large dataset detected. Performance test may take 2-5 minutes.${NC}"
     fi
-    
-    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/06_test_large_dataset.sql 2>&1 | tee output/performance_test_output.txt
-    
+    psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/06_test_large_dataset.sql 2>&1 | tee "$outfile"
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Performance test completed successfully!${NC}"
-        echo -e "${GREEN}Results saved to output/performance_test_output.txt${NC}"
-        echo -e "\n${BLUE}======== Performance Test Summary ========${NC}"
-        echo -e "${YELLOW}Comprehensive performance analysis completed on $record_count records:${NC}"
-        echo -e "• Aggregation queries: Basic counting and grouping operations"
-        echo -e "• JSON operations: Complex attribute filtering and extraction"
-        echo -e "• Full-text search: Multi-language text search capabilities"
-        echo -e "• Geospatial queries: Location-based distance and area calculations"
-        echo -e "• Vector similarity: AI-powered semantic similarity search"
-        echo -e "• Neighborhood analysis: Spatial joins and area-based queries"
-        echo -e "• Multi-modal integration: Combined data type operations"
-        echo -e "\n${YELLOW}Check the output file for detailed timing and execution statistics.${NC}"
+        echo -e "${GREEN}Performance test completed! Results saved to $outfile${NC}"
     else
-        echo -e "${RED}Performance test encountered an error. Please check the output.${NC}"
+        echo -e "${RED}Performance test failed. Please check the output.${NC}"
     fi
-    
-    echo -e "\n${YELLOW}Press Enter to continue...${NC}"
-    read -r
 }
 
 # ==============================================
@@ -338,24 +266,19 @@ cleanup_and_finalize() {
     echo -e "\n${BLUE}=============================================${NC}"
     echo -e "${BLUE}   PART 3: Cleanup and Finalization${NC}"
     echo -e "${BLUE}=============================================${NC}"
-    
-    # Ask if the user wants to clean up
-    echo -e "\n${YELLOW}Do you want to clean up the database (remove all demo data)? (y/n)${NC}"
+    echo -e "\n${YELLOW}Do you want to clean up the database (remove all demo data)? Press Enter to skip, y to clean up:${NC}"
     read -r answer
     if [[ "$answer" =~ ^[Yy]$ ]]; then
         echo -e "\n${YELLOW}Cleaning up database...${NC}"
-        psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/04_cleanup.sql 2>&1 | tee output/cleanup_output.txt
-        
+        psql -h $PGHOST -p $PGPORT -U $PGUSER -d $PGDATABASE -f scripts/04_cleanup.sql 2>&1 | tee output/cleanup_output_$(date +%Y%m%d%H%M%S).txt
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}Database cleanup completed successfully.${NC}"
+            echo -e "${GREEN}Database cleanup completed.${NC}"
         else
-            echo -e "${RED}Cleanup encountered an error. Please check the output.${NC}"
+            echo -e "${RED}Cleanup failed. Please check the output.${NC}"
         fi
     else
-        echo -e "${YELLOW}Skipping cleanup. Database will remain intact for future testing.${NC}"
+        echo -e "${YELLOW}Skipping cleanup. Database will remain intact.${NC}"
     fi
-    
-    # Show final summary
     show_final_summary
 }
 
